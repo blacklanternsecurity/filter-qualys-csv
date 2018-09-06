@@ -91,10 +91,10 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Filter Qualys scan results from CSV')
     parser.add_argument('-o',   '--overwrite',  action='store_true',                    help='overwrite destination file if it exists')
-    parser.add_argument('-w',   '--write',      type=Path,  default=default_filename,   help='output file, default = {}'.format(str(default_filename)))
-    parser.add_argument('-s',   '--severity',   type=severity,  default=range(0,6),     help='only output this severity - e.g. "1,3,5" or "4-5"')
-    parser.add_argument('-k',   '--keywords',   type=keywords,                          help='only outputs lines matching this search term(s)')
-    parser.add_argument('-l',   '--limit',      type=int,                               help='limit results, default = unlimited')
+    parser.add_argument('-w',   '--write',      type=Path,  default=default_filename,   help='output file, default = {}'.format(str(default_filename)), metavar='FILE')
+    parser.add_argument('-s',   '--severity',   type=severity,  default=range(0,6),     help='only output this severity - e.g. "1,3,5" or "4-5"', metavar='INT')
+    parser.add_argument('-k',   '--keywords',   type=keywords,                          help='only outputs lines matching this search term(s)', metavar='WORDS')
+    parser.add_argument('-l',   '--limit',      type=int,                               help='limit results, default = unlimited', metavar='INT')
     parser.add_argument('csv',                                                          help='Qualys scan CSV')
 
     try:
