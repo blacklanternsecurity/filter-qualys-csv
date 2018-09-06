@@ -14,9 +14,7 @@ $ ./filter_qualys.py scan_results.csv
 
 ### Usage:
 ~~~
-usage: filter_qualys.py [-h] [-o] [-w WRITE] [-s SEVERITY] [-k KEYWORDS]
-                        [-l LIMIT]
-                        csv
+usage: filter_qualys.py [-h] [-o] [-w FILE] [-s INT] [-k WORDS] [-l INT] csv
 
 Filter Qualys scan results from CSV
 
@@ -26,13 +24,12 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -o, --overwrite       overwrite destination file if it exists
-  -w WRITE, --write WRITE
+  -w FILE, --write FILE
                         output file, default =
-                        /home/bls/Desktop/qualys_13_24_06_09_00_2018.csv
-  -s SEVERITY, --severity SEVERITY
+                        /home/bls/Desktop/qualys_13_35_06_09_00_2018.csv
+  -s INT, --severity INT
                         only output this severity - e.g. "1,3,5" or "4-5"
-  -k KEYWORDS, --keywords KEYWORDS
+  -k WORDS, --keywords WORDS
                         only outputs lines matching this search term(s)
-  -l LIMIT, --limit LIMIT
-                        limit results, default = unlimited
+  -l INT, --limit INT   limit results, default = unlimited
 ~~~
