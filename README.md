@@ -1,4 +1,4 @@
-# filter-qualys-csv
+# Filter Qualys Scan CSV
 ### Cut down on the size of Qualys' scan results by filtering based on severity, keywords, etc.  Written in Python.
 
 ### Features:
