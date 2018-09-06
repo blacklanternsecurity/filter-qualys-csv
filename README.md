@@ -26,7 +26,7 @@ optional arguments:
   -o, --overwrite       overwrite destination file if it exists
   -w FILE, --write FILE
                         output file, default =
-                        /home/bls/Desktop/qualys_13_35_06_09_00_2018.csv
+                        Desktop/qualys_11_35_06_09_00_2018.csv
   -s INT, --severity INT
                         only output this severity - e.g. "1,3,5" or "4-5"
   -k WORDS, --keywords WORDS
