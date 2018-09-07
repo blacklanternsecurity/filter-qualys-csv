@@ -29,33 +29,37 @@ class QualysParser():
 
         processed = 0
 
-        with open(str(self.options.csv), newline='') as f0:
-            qualys_csv = csv.DictReader(f0, fieldnames=self.fieldnames)
+        try:
 
-            with open(str(options.write), mode='w', newline='') as f1:
-                output_csv = csv.DictWriter(f1, fieldnames=self.fieldnames)
-                output_csv.writeheader()
-                
-                for row in qualys_csv:
-                    processed += 1
-                    if processed % 100 == 0:
-                        sys.stderr.write('[+] Processed {:,} lines \r'.format(processed))
+            with open(str(self.options.csv), newline='') as f0:
+                qualys_csv = csv.DictReader(f0, fieldnames=self.fieldnames)
 
-                    try:
-                        severity = int(row['Severity'])
-                        if not severity in self.options.severity:
+                with open(str(options.write), mode='w', newline='') as f1:
+                    output_csv = csv.DictWriter(f1, fieldnames=self.fieldnames)
+                    output_csv.writeheader()
+                    
+                    for row in qualys_csv:
+                        processed += 1
+                        if processed % 100 == 0:
+                            sys.stderr.write('[+] Processed {:,} lines \r'.format(processed))
+
+                        try:
+                            severity = int(row['Severity'])
+                            if not severity in self.options.severity:
+                                continue
+                        except (KeyError, TypeError, ValueError):
                             continue
-                    except (KeyError, TypeError, ValueError):
-                        continue
 
-                    if self.check_keywords(row):
-                        if self.limit:
-                            if self.current >= self.limit:
-                                break
-                        output_csv.writerow(row)
-                        self.current += 1
+                        if self.check_keywords(row):
+                            if self.limit:
+                                if self.current >= self.limit:
+                                    break
+                            output_csv.writerow(row)
+                            self.current += 1
 
-                sys.stderr.write('\n[+] Wrote {:,} lines to {}'.format(self.current, str(self.options.write)))
+        except KeyboardInterrupt:
+            sys.stderr.write('\n[+] Wrote {:,} lines to {}'.format(self.current, str(self.options.write)))
+            raise KeyboardInterrupt
 
 
     def check_keywords(self, row):
@@ -67,8 +71,6 @@ class QualysParser():
 
             try:
                 field = self.pattern.sub('', field).lower()
-                #print(field)
-                #sleep(.1)
             except (AttributeError, TypeError):
                 continue
 
@@ -124,22 +126,22 @@ if __name__ == '__main__':
         options.write = options.write.absolute()
 
         if not options.csv.is_file():
-            print('[!] {} doesn\'t exist'.format(str(options.csv)))
+            sys.stderr.write('\n[!] {} doesn\'t exist\n'.format(str(options.csv)))
             sleep(1)
             sys.exit(1)
 
             if options.write.exists() and not options.overwrite:
-                print('[!] {} already exists.  Consider using --overwrite')
+                sys.stderr.write('\n[!] {} already exists.  Consider using --overwrite\n'.format(str(options.write)))
                 sleep(2)
                 sys.exit(1)
 
         q = QualysParser(options)
         q.parse_csv()
-        sys.stderr.write('\n[+] Done')
+        sys.stderr.write('\n[+] Done\n')
 
     except AssertionError as e:
-        sys.stderr.write('\n[!] {}'.format(str(e)))
+        sys.stderr.write('\n[!] {}\n'.format(str(e)))
         sys.exit(1)
     except KeyboardInterrupt:
-        sys.stderr.write('\n[!] Interrupted')
+        sys.stderr.write('\n[!] Interrupted\n')
         sys.exit(1)
