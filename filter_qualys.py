@@ -66,7 +66,9 @@ class QualysParser():
         for field in row.values():
 
             try:
-                field = self.pattern.sub('', field)
+                field = self.pattern.sub('', field).lower()
+                #print(field)
+                #sleep(.1)
             except (AttributeError, TypeError):
                 continue
 
