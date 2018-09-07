@@ -1,5 +1,5 @@
 # Filter Qualys Scan CSV
-### Cut down on the size of Qualys' scan results by filtering based on severity, keywords, etc.  Written in Python.
+### Cut down on the size of Qualys' scan CSV by filtering based on severity, keywords, etc.  Written in Python.
 
 ### Features:
 * Filter by keyword(s) or severity
@@ -9,7 +9,7 @@
 
 ### Example:
 ~~~
-$ ./filter_qualys.py scan_results.csv
+$ ./filter_qualys.py --severity 5 scan_results.csv
 ~~~
 
 ### Usage:
@@ -30,6 +30,6 @@ optional arguments:
   -s INT, --severity INT
                         only output this severity - e.g. "1,3,5" or "4-5"
   -k WORDS, --keywords WORDS
-                        only outputs lines matching this search term(s)
+                        only outputs lines matching these search term(s)
   -l INT, --limit INT   limit results, default = unlimited
 ~~~
