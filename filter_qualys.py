@@ -8,7 +8,7 @@ from time import sleep
 from pathlib import Path
 from datetime import datetime
 
-csv.field_size_limit(10000000)
+csv.field_size_limit(100000000)
 
 class QualysParser():
 
@@ -50,13 +50,12 @@ class QualysParser():
 
                     if self.check_keywords(row):
                         if self.limit:
-                            if self.current > self.limit:
+                            if self.current >= self.limit:
                                 break
-                        else:
-                            output_csv.writerow(row)
-                            self.current += 1
+                        output_csv.writerow(row)
+                        self.current += 1
 
-                sys.stderr.write('\n[+] Wrote {:,} lines \r'.format(self.current))
+                sys.stderr.write('\n[+] Wrote {:,} lines to {}'.format(self.current, str(self.options.write)))
 
 
     def check_keywords(self, row):
@@ -73,7 +72,6 @@ class QualysParser():
 
             for word in self.keywords:
                 if word in field:
-                    print(word)
                     return True
 
         return False
@@ -104,11 +102,15 @@ def severity(s):
 if __name__ == '__main__':
 
     default_filename = datetime.now().strftime('qualys_%I_%M_%S_%m_%d_%Y.csv')
-    default_filename = Path.home() / 'Desktop' / default_filename
+    default_folder = Path.home() / 'Desktop'
+    if default_folder.is_dir():
+        default_filename = default_folder / default_filename
+    else:
+        default_filename = (Path('.') / default_filename).absolute()
 
     parser = argparse.ArgumentParser(description='Filter Qualys scan results from CSV')
     parser.add_argument('-o',   '--overwrite',  action='store_true',                        help='overwrite destination file if it exists')
-    parser.add_argument('-w',   '--write',      type=Path,  default=default_filename,       help='output file, default = {}'.format(str(default_filename)), metavar='FILE')
+    parser.add_argument('-w',   '--write',      type=Path,      default=default_filename,   help='output file, default = {}'.format(str(default_filename)), metavar='FILE')
     parser.add_argument('-s',   '--severity',   type=severity,  default=list(range(0,6)),   help='only output this severity - e.g. "1,3,5" or "4-5"', metavar='INT')
     parser.add_argument('-k',   '--keywords',   type=keywords,  default=[],                 help='only outputs lines matching these search term(s)', metavar='WORDS')
     parser.add_argument('-l',   '--limit',      type=int,                                   help='limit results, default = unlimited', metavar='INT')
@@ -116,6 +118,8 @@ if __name__ == '__main__':
 
     try:
         options = parser.parse_args()
+        options.csv = options.csv.absolute()
+        options.write = options.write.absolute()
 
         if not options.csv.is_file():
             print('[!] {} doesn\'t exist'.format(str(options.csv)))
